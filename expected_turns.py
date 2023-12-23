@@ -67,9 +67,8 @@ class Board:
 
         # remove rows/cols corresponding to ladder bottoms and snake mouths
         # due to the +1 shift, index is indeed the number
-        for i in snake_mouths + ladder_bottoms:
-            for j in [0,1]:
-                T = np.delete(T,(i),axis=j)
+        for j in [0,1]:
+            T = np.delete(T,[i for i in snake_mouths + ladder_bottoms],axis=j)
 
 
 
@@ -82,8 +81,8 @@ class Board:
         for j in [0,1]:
             T = np.delete(T,(-1),axis=j)
 
-        # compute (I-T)^{-1}
-        R = np.linalg.inv((np.identity(len(T) - T)))
+        # compute (I-T)^{-1}   
+        R = np.linalg.inv((np.identity(len(T)) - T))
 
         return R[0,:]    
 
@@ -94,3 +93,12 @@ class Board:
     def expected_number_of_turns_to_reach_end(self):
         R0 = self.first_row_of_exp()
         return sum(R0)
+
+
+ladders = [(4,14),(9,31),(20,38),(28,84),(40,59),(51,67),(63,81),(71,91)]
+snakes = [(17,7),(54,34),(62,19),(64,60),(87,24),(93,73),(95,75),(99,78)]
+s = 100
+
+my_board = Board(s,snakes=snakes,ladders=ladders)
+
+print(my_board.expected_number_of_turns_to_reach_end())
